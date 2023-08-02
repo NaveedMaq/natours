@@ -13,7 +13,8 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "mongoose": "^7.4.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "slugish": "^1.0.0"
   },
   "devDependencies": {
     "eslint": "^8.46.0",

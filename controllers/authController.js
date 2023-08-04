@@ -11,17 +11,25 @@ const signToken = (id) =>
     expiresIn: process.env.JWT_EXPIRES_IN,
   });
 
-const createSendToken = (user, statusCode, res, sendUser = false) => {
+const createSendToken = (user, statusCode, res) => {
   const token = signToken(user._id);
 
-  const responseBody = {
-    status: 'success',
-    token,
+  const cookieOptions = {
+    maxAge: process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000,
+    httpOnly: true,
   };
 
-  if (sendUser) responseBody.data = { user };
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true;
+  res.cookie('jwt', token, cookieOptions);
 
-  res.status(statusCode).json(responseBody);
+  // Remove password from output
+  user.password = undefined;
+
+  res.status(statusCode).json({
+    status: 'success',
+    token,
+    data: { user },
+  });
 };
 
 exports.signup = catchAsync(async (req, res, next) => {
@@ -32,7 +40,7 @@ exports.signup = catchAsync(async (req, res, next) => {
     passwordConfirm: req.body.passwordConfirm,
   });
 
-  createSendToken(newUser, 201, res, true);
+  createSendToken(newUser, 201, res);
 });
 
 exports.login = catchAsync(async (req, res, next) => {

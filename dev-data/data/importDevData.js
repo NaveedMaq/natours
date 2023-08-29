@@ -3,18 +3,17 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const Tour = require('../../models/tourModel');
 
-dotenv.config({ path: '../../config.env' });
+dotenv.config({ path: `${__dirname}/../../config.env` });
 
-console.log(process.env.DATABASE);
 const DB = process.env.DATABASE.replace(
   '<PASSWORD>',
   process.env.DATABASE_PASSWORD,
 );
 
-mongoose.connect(DB).then(() => console.log('DB connection successful!'));
-
 // READ JSON FILE
-const tours = JSON.parse(fs.readFileSync('./tours-simple.json', 'utf-8'));
+const tours = JSON.parse(
+  fs.readFileSync(`${__dirname}/tours-id.json`, 'utf-8'),
+);
 
 // IMPORT DATA INTO DATABASE
 const importData = async () => {
@@ -22,7 +21,7 @@ const importData = async () => {
     await Tour.create(tours);
     console.log('Data successfully loaded!');
   } catch (error) {
-    console.log(error);
+    console.error('error 💥:', error);
   }
   process.exit();
 };
@@ -33,13 +32,22 @@ const deleteData = async () => {
     await Tour.deleteMany({});
     console.log('Data successfully deleted!');
   } catch (error) {
-    console.log(error);
+    console.error('error 💥:', error);
   }
   process.exit();
 };
 
+let runFunction = null;
 if (process.argv[2] === '--import') {
-  importData();
+  runFunction = importData;
 } else if (process.argv[2] === '--delete') {
-  deleteData();
+  runFunction = deleteData;
+} else {
+  console.error('error 💥', 'operation arg has to be --import or --delete');
+  process.exit(1);
 }
+
+mongoose.connect(DB).then(() => {
+  console.log('DB connection successful!');
+  runFunction();
+});

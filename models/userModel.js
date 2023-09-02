@@ -67,14 +67,14 @@ userSchema.pre('save', function (next) {
   next();
 });
 
-userSchema.methods.checkPassword = function (candidatePassword, userPassword) {
-  return bcrypt.compare(candidatePassword, userPassword);
-};
-
 userSchema.pre(/^find/, function (next) {
   this.find({ active: { $ne: false } });
   next();
 });
+
+userSchema.methods.checkPassword = function (candidatePassword, userPassword) {
+  return bcrypt.compare(candidatePassword, userPassword);
+};
 
 userSchema.methods.changedPasswordAfter = function (jwtTimestamp) {
   if (this.passwordChangedAt) {

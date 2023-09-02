@@ -142,6 +142,13 @@ toursSchema.virtual('durationWeeks').get(function () {
   return this.duration / 7;
 });
 
+// Virtual populate
+toursSchema.virtual('reviews', {
+  ref: 'Review',
+  foreignField: 'tour',
+  localField: '_id',
+});
+
 // DOCUMENT MIDDLEWARE
 toursSchema.pre('save', function (next) {
   this.slug = slugish(this.name, { lower: true });
@@ -152,6 +159,7 @@ toursSchema.pre('save', function (next) {
 toursSchema.pre(/^find/, function (next) {
   this.start = Date.now();
   this.find({ secretTour: { $ne: true } });
+
   next();
 });
 
@@ -165,6 +173,7 @@ toursSchema.pre(/^find/, function (next) {
 
 toursSchema.post(/^find/, function (docs, next) {
   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+
   next();
 });
 

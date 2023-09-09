@@ -1,11 +1,13 @@
 /* eslint-disable */
 import { login, logout } from './login';
 import { displayMap } from './mapbox';
+import { updateSettings } from './updateSettings';
 
 // DOM ELEMENTS
 const mapBox = document.getElementById('map');
-const form = document.querySelector('.form');
+const form = document.querySelector('.form--login');
 const logoutBtn = document.querySelector('.nav__el--logout');
+const userDataForm = document.querySelector('.form-user-data');
 
 // DELEGATION
 
@@ -26,4 +28,15 @@ if (form)
 
 if (logoutBtn) {
   logoutBtn.addEventListener('click', logout);
+}
+
+if (userDataForm) {
+  userDataForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+
+    updateSettings({ name, email }, 'data');
+  });
 }

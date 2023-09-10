@@ -1,6 +1,6 @@
 # Natours Tours App
 
-\*\* Tour registration app build using modern techonologies
+## Tour registration app build using modern techonologies
 
 - HTML
 - CSS

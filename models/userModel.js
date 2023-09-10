@@ -102,7 +102,7 @@ userSchema.methods.createPasswordResetToken = function () {
   // Set password reset expiry to 10 min
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
 
-  console.log({ resetToken }, this.passwordResetToken);
+  // console.log({ resetToken }, this.passwordResetToken);
   return resetToken;
 };
 

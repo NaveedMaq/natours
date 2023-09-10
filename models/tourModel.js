@@ -176,11 +176,11 @@ toursSchema.pre(/^find/, function (next) {
   next();
 });
 
-toursSchema.post(/^find/, function (docs, next) {
-  console.log(`Query took ${Date.now() - this.start} milliseconds!`);
+// toursSchema.post(/^find/, function (docs, next) {
+//   console.log(`Query took ${Date.now() - this.start} milliseconds!`);
 
-  next();
-});
+//   next();
+// });
 
 // AGGREGATE MIDDLEWARE
 // toursSchema.pre('aggregate', function (next) {
